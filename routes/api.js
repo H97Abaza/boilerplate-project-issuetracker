@@ -34,7 +34,6 @@ module.exports = function (app) {
     .get(function (req, res) {
       let project = req.params.project;
       let filters = req.query;
-      console.log({ project, ...filters });
       Issue.find({ project, ...filters })
         .then((docs) => res.json(docs))
         .catch((err) => {
@@ -44,16 +43,13 @@ module.exports = function (app) {
     })
     .post(function (req, res) {
       let project = req.params.project;
-      console.log({ post: req.body });
-      let issue = new Issue({...req.body,project});
+      let issue = new Issue({ ...req.body, project });
       issue
         .save()
         .then((doc) => {
-          console.log({ doc });
           res.json(doc);
         })
         .catch((err) => {
-          console.log({ err: JSON.stringify(err) });
           if (err.toString().match("is required"))
             return res.json({ error: "required field(s) missing" });
           res.json(err);
